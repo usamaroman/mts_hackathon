@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">FinVoice</string>
+
+    <string name="prompt_message">Что вы хотите сделать?</string>
+    <string name="open_main_screen">Открыть главный экран</string>
+    <string name="show_user_profile">Показать профиль пользователя</string>
+</resources>
