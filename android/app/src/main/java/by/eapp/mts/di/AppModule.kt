@@ -1,14 +1,17 @@
 package by.eapp.mts.di
 
+import android.content.Context
 import by.eapp.mts.Const
 import by.eapp.mts.data.remote.ApiService
 import by.eapp.mts.data.repository.ApiInteractionRepositoryImpl
 import by.eapp.mts.domain.repository.ApiInteractionRepository
 import by.eapp.mts.domain.use_cases.GetContactsUseCase
 import by.eapp.mts.domain.use_cases.SendSpeechUseCase
+import by.eapp.mts.network.NetworkMonitor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -65,5 +68,11 @@ object AppModule {
     @Provides
     @Singleton
     fun providesSendSpeechUseCase(apiRepository: ApiInteractionRepository) = SendSpeechUseCase(apiRepository)
+
+    @Provides
+    @Singleton
+    fun provideNetworkMonitor(@ApplicationContext context: Context): NetworkMonitor {
+        return NetworkMonitor(context)
+    }
 
 }
