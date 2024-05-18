@@ -42,6 +42,8 @@ fun TranslateSpeechScreen(
     val context = LocalContext.current
     val speechToTextState by viewModel.speechToTextState.collectAsState()
 
+    val networkStatus by viewModel.networkState.collectAsState()
+
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {
@@ -50,35 +52,43 @@ fun TranslateSpeechScreen(
             color = Color.White,
             modifier = Modifier.fillMaxSize()
         ) {
+
             Column(
                 modifier = modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Speak something:",
-                    fontSize = 25.sp,
-                    color = Color.Black
-                )
-                MicrophoneButton(onClick = {
-                    viewModel.startSpeechRecognition(context)
-                }
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = when {
-                        speechToTextState.isSpeaking -> "Recording..."
-                        speechToTextState.speech.isNotEmpty() -> "Recorded: ${speechToTextState.speech}"
-                        else -> ""
-                    },
-                    color = Color.Black,
-                    fontSize = 20.sp
-                )
-                if (speechToTextState.err != null) {
+                if (!networkStatus) {
                     Text(
-                        text = "Error: ${speechToTextState.err}",
+                        text = "No internet connection",
                         color = Color.Red
                     )
+                } else {
+                    Text(
+                        text = "Speak something:",
+                        fontSize = 25.sp,
+                        color = Color.Black
+                    )
+                    MicrophoneButton(onClick = {
+                        viewModel.startSpeechRecognition(context)
+                    }
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = when {
+                            speechToTextState.isSpeaking -> "Recording..."
+                            speechToTextState.speech.isNotEmpty() -> "Recorded: ${speechToTextState.speech}"
+                            else -> ""
+                        },
+                        color = Color.Black,
+                        fontSize = 20.sp
+                    )
+                    if (speechToTextState.err != null) {
+                        Text(
+                            text = "Error: ${speechToTextState.err}",
+                            color = Color.Red
+                        )
+                    }
                 }
             }
         }

@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.eapp.mts.domain.use_cases.SendSpeechUseCase
+import by.eapp.mts.network.NetworkMonitor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,8 +26,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SpeechToTextViewModel @Inject constructor(
-    private val sendSpeechUseCase: SendSpeechUseCase
+    private val sendSpeechUseCase: SendSpeechUseCase,
+    private val networkMonitor: NetworkMonitor
 ) : ViewModel() {
+
+    val networkState = networkMonitor.networkStatus
 
     private val _speechToTextState = MutableStateFlow(SpeechToTextState())
     val speechToTextState: StateFlow<SpeechToTextState> = _speechToTextState
