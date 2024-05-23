@@ -1,0 +1,13 @@
+type User {
+    id: ID!
+    name: String!
+    phoneNum: String!
+    avatar: String!
+    cardNumber: String!
+    balance: Int
+}
+
+type Query {
+    users: [User!]!
+}
+

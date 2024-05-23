@@ -3,8 +3,9 @@ package methods
 import (
 	"encoding/json"
 	"log"
+	"mts/graph/model"
 	"net/http"
-	
+
 	"mts/users"
 
 	"github.com/gin-gonic/gin"
@@ -32,7 +33,7 @@ func Speech(ctx *gin.Context) {
 }
 
 func Contacts(ctx *gin.Context) {
-	c := make([]*users.User, 0, len(users.Users))
+	c := make([]*model.User, 0, len(users.Users))
 
 	for _, v := range users.Users {
 		c = append(c, v)
