@@ -23,7 +23,8 @@ jobs:
     - name: enter android directory
       run: echo $PWD
     - name: enter android directory
-      run: cd android
+      run: cd android && echo $PWD
+      
     - name: grant execute permission for gradlew
       run: chmod +x gradlew
     - name: build with Gradle
