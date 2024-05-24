@@ -40,7 +40,8 @@ func main() {
 	r.GET("/ping", methods.Ping)
 	r.POST("/speech", methods.Speech)
 	r.GET("/contacts", methods.Contacts)
-	r.POST("/query", graphqlHandler())
+
+	r.POST("/graphql", graphqlHandler())
 	r.GET("/", playgroundHandler())
 
 	log.Println("server running on port 8080")
