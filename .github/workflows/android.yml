@@ -21,6 +21,8 @@ jobs:
         cache: gradle
 
     - name: enter android directory
+      run: echo $PWD
+    - name: enter android directory
       run: cd android
     - name: grant execute permission for gradlew
       run: chmod +x gradlew
