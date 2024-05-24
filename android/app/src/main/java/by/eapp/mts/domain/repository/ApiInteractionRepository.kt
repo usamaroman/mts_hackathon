@@ -1,5 +1,6 @@
 package by.eapp.mts.domain.repository
 
+import by.eapp.mts.GetAllUserNamesQuery
 import by.eapp.mts.domain.model.Contact
 import kotlinx.coroutines.flow.Flow
 

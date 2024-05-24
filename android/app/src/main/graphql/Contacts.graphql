@@ -1,0 +1,8 @@
+query GetAllUserNames {
+        users {
+            id,
+            name,
+            avatar,
+            phoneNum
+        }
+}
