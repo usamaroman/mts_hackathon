@@ -3,6 +3,13 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     kotlin ("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.apollographql.apollo3").version("3.8.4")
+}
+
+apollo {
+    service("service") {
+        packageName.set("by.eapp.mts")
+    }
 }
 
 android {
@@ -121,4 +128,6 @@ dependencies {
 
     //retrofit
     implementation ("com.jakewharton.timber:timber:5.0.1")
+
+    implementation("com.apollographql.apollo3:apollo-runtime:3.8.4")
 }
