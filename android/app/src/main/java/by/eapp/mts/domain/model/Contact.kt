@@ -5,5 +5,5 @@ data class Contact(
     val name: String,
     val contactIcon: String,
     val phoneNumber: String,
-    val balance: Int,
+
 )
