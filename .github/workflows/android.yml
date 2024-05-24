@@ -20,12 +20,8 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    - name: enter android directory
-      run: echo $PWD
-    - name: enter android directory
-      run: cd android && echo $PWD
-      
-    - name: grant execute permission for gradlew
-      run: chmod +x gradlew
     - name: build with Gradle
-      run: ./gradlew build
+      run: |
+        cd android
+        chmod +x gradlew
+        ./gradlew build
