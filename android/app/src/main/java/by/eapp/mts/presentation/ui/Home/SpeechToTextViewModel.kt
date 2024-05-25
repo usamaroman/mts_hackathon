@@ -59,12 +59,16 @@ class SpeechToTextViewModel @Inject constructor(
     }
     //расписать в onError код каждой ошибки для отображения на ui
     private fun startSpeechRecognitionInternal(context: Context) {
+
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+
+        intent.putExtra(RecognizerIntent.LANGUAGE_MODEL_FREE_FORM, Locale("ru_RU"))
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH)
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, Locale("ru-RU"))
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale("ru-RU"))
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, Locale("ru_RU"))
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale("ru_RU"))
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 20)
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Start talking")
+        intent.putExtra(RecognizerIntent.RESULT_AUDIO_ERROR.toString(), "true")
 
         _speechToTextState.value = _speechToTextState.value.copy(isSpeaking = true, speech = "...")
 
