@@ -24,13 +24,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import by.eapp.mts.domain.model.Operation
 import by.eapp.mts.presentation.navigation.BottomBar
+import by.eapp.mts.presentation.ui.Home.MicrophoneButton
+import by.eapp.mts.presentation.ui.Home.SpeechToTextViewModel
 import by.eapp.mts.presentation.utils.CustomText
 import by.eapp.mts.ui.theme.IncomeColor
 import by.eapp.mts.ui.theme.OutcomeColor
@@ -38,6 +42,7 @@ import by.eapp.mts.ui.theme.OutcomeColor
 @Composable
 fun OperationsScreen(
     navHostController: NavHostController,
+    viewModelSpeech: SpeechToTextViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
 ) {
     val operationsList = listOf(
@@ -48,10 +53,15 @@ fun OperationsScreen(
         Operation("Robert Gaspyaran", "21.12.2024 18:49", 10, false),
         Operation("John Doe", "21.12.2024 18:49", 99, true)
     )
-
+    val context = LocalContext.current
     Scaffold(
         bottomBar = { BottomBar(navController = navHostController) },
-        containerColor = Color.White
+        containerColor = Color.White,
+        floatingActionButton = {
+            MicrophoneButton {
+                viewModelSpeech.startSpeechRecognition(context)
+            }
+        }
     ) {
         LazyColumn(
             contentPadding = PaddingValues(start = 12.dp, end = 12.dp)

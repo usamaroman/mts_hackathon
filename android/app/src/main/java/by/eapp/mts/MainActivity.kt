@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.compose.rememberNavController
 import by.eapp.mts.presentation.navigation.NavGraph
 import by.eapp.mts.presentation.ui.Contacts.ContactsViewModel
@@ -37,7 +36,7 @@ class MainActivity : ComponentActivity() {
                 //speechToTextViewModel.initializeTextToSpeech(requireContext())
                     val navController = rememberNavController()
 
-                    speechToTextViewModel.initializePermissionLauncher(permissionLauncher)
+                    speechToTextViewModel.initialize(permissionLauncher, navController)
                     NavGraph(navController = navController, speechToTextViewModel = speechToTextViewModel, contactsViewModel = contactsViewModel)
                 
 

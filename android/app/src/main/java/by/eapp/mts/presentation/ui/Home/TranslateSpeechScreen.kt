@@ -1,6 +1,5 @@
 package by.eapp.mts.presentation.ui.Home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,6 +32,7 @@ import androidx.navigation.NavHostController
 import by.eapp.mts.presentation.navigation.BottomBar
 import by.eapp.mts.presentation.ui.Home.utils.bounceClick
 
+
 @Composable
 fun TranslateSpeechScreen(
     navController: NavHostController,
@@ -45,7 +45,12 @@ fun TranslateSpeechScreen(
     val networkStatus by viewModel.networkState.collectAsState()
 
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = { BottomBar(navController = navController) },
+        floatingActionButton = {
+            MicrophoneButton {
+                viewModel.startSpeechRecognition(context)
+            }
+        }
     ) {
 
         Surface(
@@ -65,14 +70,11 @@ fun TranslateSpeechScreen(
                     )
                 } else {
                     Text(
-                        text = "Speak something:",
+                        text = "ГЛАвный экрна",
                         fontSize = 25.sp,
                         color = Color.Black
                     )
-                    MicrophoneButton(onClick = {
-                        viewModel.startSpeechRecognition(context)
-                    }
-                    )
+
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = when {
@@ -120,6 +122,6 @@ fun MicrophoneButton(onClick: () -> Unit) {
                 .align(Alignment.CenterVertically),
             tint = Color.Black,
 
-        )
+            )
     }
 }
