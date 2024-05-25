@@ -1,10 +1,12 @@
 package by.eapp.mts.presentation.ui.Contacts
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,11 +15,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -53,35 +60,37 @@ fun ContactsScreen(
 
     Scaffold(
         bottomBar = { BottomBar(navController = navHostController) },
-        topBar = {
+        containerColor = Color.White
+    ) {
+        it
+        Column (
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize().padding(top = 8.dp)
+        ) {
+//            TextField(
+//                value = searchText,
+//                onValueChange = viewModel::onSearchTextChanged,
+//                modifier = Modifier.fillMaxWidth(0.9f),
+//                placeholder = { Text(text = "Search..") }
+//            )
             SearchBar(
-                query = searchText,
-                onQueryChange = {
-                    viewModel.onSearchTextChanged(it)
-                },
-                onSearch = {
-                    viewModel.onSearchTextChanged(it)
-                },
-                active = isSearching,
-                onActiveChange = {
-                    viewModel.onToggleSearch()
-                },
-
-                placeholder = {
-                    Text(
-                        text = "Search"
+                searchText = searchText,
+                onSearchTextChanged = viewModel::onSearchTextChanged
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            if (isSearching) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center),
                     )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
+                }
+            } else {
+
                 LazyColumn(
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     contentPadding = PaddingValues(top = 16.dp)
                 ) {
-
 
                     items(searchResults) { contact ->
                         ContactItem(contact = contact)
@@ -89,26 +98,34 @@ fun ContactsScreen(
                     }
                 }
             }
-        },
-        containerColor = Color.White
-    ) {
-        it
-        LazyColumn(
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = PaddingValues(top = 16.dp)
-        ) {
-
-
-            items(state.contacts) { contact ->
-                ContactItem(contact = contact)
-                Spacer(modifier = Modifier.height(8.dp))
-            }
         }
     }
 }
 
-
+@Composable
+fun SearchBar(
+    searchText: String = "",
+    onSearchTextChanged: (String) -> Unit = {},
+) {
+    OutlinedTextField(
+        value = searchText,
+        onValueChange = onSearchTextChanged,
+        modifier = Modifier.fillMaxWidth(0.95f),
+        placeholder = { Text(text = "Search..") },
+        maxLines = 1,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            focusedTextColor = Color.DarkGray,
+            unfocusedTextColor = Color.DarkGray,
+            focusedPlaceholderColor = Color.LightGray,
+            unfocusedPlaceholderColor = Color.LightGray,
+            unfocusedBorderColor = Color.LightGray,
+            focusedBorderColor = Color.DarkGray
+        ),
+        shape = RoundedCornerShape(10.dp)
+    )
+}
 @Composable
 fun ContactItem(
     modifier: Modifier = Modifier,

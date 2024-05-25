@@ -16,7 +16,6 @@ class SendSpeechUseCase @Inject constructor(
             request
         )
     }
-
 }
 
 class GetContactsUseCase @Inject constructor(

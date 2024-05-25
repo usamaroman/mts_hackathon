@@ -11,7 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val NavBar = Color(0xFFC8C7CC)
-val SelectedNavBarItem = Color(0xFFE91459)
+val SelectedNavBarItem = Color(0xFFDFDDDE)
 
 val IncomeColor = Color(0xFFEBF0E9)
 val OutcomeColor = Color(0xFFBB8989)

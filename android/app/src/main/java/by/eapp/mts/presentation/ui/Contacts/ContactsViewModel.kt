@@ -6,11 +6,14 @@ import by.eapp.mts.domain.model.Contact
 import by.eapp.mts.domain.use_cases.GetContactsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -55,7 +58,11 @@ class ContactsViewModel @Inject constructor(
     }
 
 
-    val searchResults = searchText.combine(_searchingContacts) {
+    @OptIn(FlowPreview::class)
+    val searchResults = searchText
+        .debounce(1000L)
+        .onEach { _isSearching.update { true } }
+        .combine(_searchingContacts) {
         text, contacts ->
         if (text.isBlank()) {
             contacts
@@ -64,7 +71,11 @@ class ContactsViewModel @Inject constructor(
                 it.name.contains(text, ignoreCase = true)
             }
         }
-    }.stateIn(
+    }
+        .onEach {
+            _isSearching.update { false }
+        }
+            .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(3000),
         initialValue = emptyList()
