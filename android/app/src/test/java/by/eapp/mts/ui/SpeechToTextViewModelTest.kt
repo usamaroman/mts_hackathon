@@ -11,11 +11,7 @@ import by.eapp.mts.network.NetworkMonitor
 import by.eapp.mts.presentation.ui.Home.SpeechToTextViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScheduler
-import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -23,7 +19,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
-import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mockito.doAnswer
@@ -34,8 +29,6 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
-import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.argumentCaptor
 
 
 class SpeechToTextViewModelTest {
@@ -64,7 +57,7 @@ class SpeechToTextViewModelTest {
         Dispatchers.setMain(Dispatchers.Default)
 
         this.viewModel = SpeechToTextViewModel(sendSpeechUseCase, networkMonitor)
-        this.viewModel.initializePermissionLauncher(permissionLauncher)
+        this.viewModel.initialize(permissionLauncher)
 
         `when`(context.packageManager).thenReturn(packageManager)
     }

@@ -33,6 +33,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.SemanticsPropertiesAndroid
+import androidx.compose.ui.semantics.SemanticsPropertyReceiver
+
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -43,6 +48,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import by.eapp.mts.domain.model.Contact
 import by.eapp.mts.presentation.navigation.BottomBar
+import by.eapp.mts.presentation.ui.Home.MicrophoneButton
+import by.eapp.mts.presentation.ui.Home.SpeechToTextViewModel
 import by.eapp.mts.presentation.utils.CustomText
 import coil.compose.AsyncImage
 
@@ -50,17 +57,34 @@ import coil.compose.AsyncImage
 @Composable
 fun ContactsScreen(
     viewModel: ContactsViewModel = hiltViewModel(),
+    viewModelSpeech: SpeechToTextViewModel = hiltViewModel(),
     navHostController: NavHostController,
 ) {
     val state by viewModel.state.collectAsState()
+
+    val context = LocalContext.current
+
 
     val searchText by viewModel.searchText.collectAsState()
     val isSearching by viewModel.isSearching.collectAsState()
     val searchResults by viewModel.searchResults.collectAsState()
 
+
+    Scaffold(
+
+    val searchText by viewModel.searchText.collectAsState()
+    val isSearching by viewModel.isSearching.collectAsState()
+    val searchResults by viewModel.searchResults.collectAsState()
+
+
     Scaffold(
         bottomBar = { BottomBar(navController = navHostController) },
-        containerColor = Color.White
+        containerColor = Color.White,
+        floatingActionButton = {
+            MicrophoneButton {
+                viewModelSpeech.startSpeechRecognition(context)
+            }
+        }
     ) {
         it
         Column (

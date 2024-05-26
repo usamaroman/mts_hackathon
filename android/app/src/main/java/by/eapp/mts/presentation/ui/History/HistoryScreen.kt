@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import by.eapp.mts.presentation.navigation.BottomBar
+import by.eapp.mts.presentation.ui.Home.MicrophoneButton
 
 @Composable
 fun HistoryScreen(
@@ -19,7 +20,12 @@ fun HistoryScreen(
 ) {
     Scaffold(
         bottomBar = { BottomBar(navController = navHostController) },
-        containerColor = Color.White
+        containerColor = Color.White,
+        floatingActionButton = {
+            MicrophoneButton {
+               // viewModel.startSpeechRecognition(context)
+            }
+        }
     ) {
         it
 

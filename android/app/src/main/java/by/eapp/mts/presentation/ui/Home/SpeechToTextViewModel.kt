@@ -8,14 +8,14 @@ import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
-import android.speech.tts.TextToSpeech
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import by.eapp.mts.domain.use_cases.SendSpeechUseCase
 import by.eapp.mts.network.NetworkMonitor
+import by.eapp.mts.presentation.EventNavHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SpeechToTextViewModel @Inject constructor(
     private val sendSpeechUseCase: SendSpeechUseCase,
-    private val networkMonitor: NetworkMonitor
+    private val networkMonitor: NetworkMonitor,
 ) : ViewModel() {
 
     val networkState = networkMonitor.networkStatus
@@ -36,17 +36,24 @@ class SpeechToTextViewModel @Inject constructor(
     val speechToTextState: StateFlow<SpeechToTextState> = _speechToTextState
 
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
-    fun initializePermissionLauncher(launcher: ActivityResultLauncher<String>) {
+    private var eventNavHandler: EventNavHandler? = null
+    fun initialize(launcher: ActivityResultLauncher<String>, navController: NavController) {
         permissionLauncher = launcher
+        eventNavHandler = EventNavHandler(navController)
     }
 
     fun startSpeechRecognition(context: Context) {
         if (!SpeechRecognizer.isRecognitionAvailable(context)) {
-            _speechToTextState.value = SpeechToTextState(err = "Speech recognition is not available")
+            _speechToTextState.value =
+                SpeechToTextState(err = "Speech recognition is not available")
             return
         }
 
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             requestRecordAudioPermission()
             return
         }
@@ -57,15 +64,25 @@ class SpeechToTextViewModel @Inject constructor(
     private fun requestRecordAudioPermission() {
         permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
     }
+
     //расписать в onError код каждой ошибки для отображения на ui
     private fun startSpeechRecognitionInternal(context: Context) {
 
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
 
+        intent.putExtra(
+            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH
+        )
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, Locale("ru-RU"))
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale("ru-RU"))
+
+
         intent.putExtra(RecognizerIntent.LANGUAGE_MODEL_FREE_FORM, Locale("ru_RU"))
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, Locale("ru_RU"))
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale("ru_RU"))
+
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 20)
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Start talking")
         intent.putExtra(RecognizerIntent.RESULT_AUDIO_ERROR.toString(), "true")
@@ -77,6 +94,7 @@ class SpeechToTextViewModel @Inject constructor(
             override fun onReadyForSpeech(params: Bundle?) {
 
             }
+
             override fun onBeginningOfSpeech() {}
             override fun onRmsChanged(rmsdB: Float) {}
             override fun onBufferReceived(buffer: ByteArray?) {}
@@ -98,6 +116,7 @@ class SpeechToTextViewModel @Inject constructor(
                     )
                     viewModelScope.launch {
                         sendSpeechUseCase.invoke(data[0])
+                        eventNavHandler?.handleEvent(data[0])
                     }
                 }
             }
