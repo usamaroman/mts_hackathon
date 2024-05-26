@@ -8,6 +8,7 @@ import by.eapp.mts.domain.repository.ApiInteractionRepository
 import by.eapp.mts.domain.use_cases.GetContactsUseCase
 import by.eapp.mts.domain.use_cases.SendSpeechUseCase
 import by.eapp.mts.network.NetworkMonitor
+import com.apollographql.apollo3.ApolloClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,7 +59,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesApiRepository(apiService: ApiService): ApiInteractionRepository = ApiInteractionRepositoryImpl(apiService)
+    fun providesApiRepository(
+        apiService: ApiService,
+        apolloClient: ApolloClient):
+        ApiInteractionRepository = ApiInteractionRepositoryImpl(apiService, apolloClient)
 
 
     @Provides
@@ -74,5 +78,15 @@ object AppModule {
     fun provideNetworkMonitor(@ApplicationContext context: Context): NetworkMonitor {
         return NetworkMonitor(context)
     }
+
+
+    @Singleton
+    @Provides
+    fun providesApolloClient():ApolloClient {
+        return ApolloClient.Builder()
+            .serverUrl(Const.BASE_URL + "graphql")
+            .build()
+    }
+
 
 }
