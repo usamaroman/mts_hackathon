@@ -44,8 +44,8 @@ func main() {
 	r.POST("/graphql", graphqlHandler())
 	r.GET("/", playgroundHandler())
 
-	log.Println("server running on port 8080")
-	log.Printf("connect to http://localhost:8080/ for GraphQL playground")
+	log.Println("server running on port 8001")
+	log.Printf("connect to http://localhost:8001/ for GraphQL playground")
 
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe(":8001", r))
 }
