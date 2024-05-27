@@ -4,6 +4,8 @@ go 1.22.2
 
 require (
 	github.com/99designs/gqlgen v0.17.47
+	github.com/galeone/tensorflow/tensorflow/go v0.0.0-20240119075110-6ad3cf65adfe
+	github.com/galeone/tfgo v0.0.0-20230715013254-16113111dc99
 	github.com/gin-gonic/gin v1.9.1
 	github.com/vektah/gqlparser/v2 v2.5.12
 )
